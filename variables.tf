@@ -77,3 +77,15 @@ variable "app_connectors" {
   description = "(Optional) A list of app-connectors to deploy. Multiple items represents a HA app-connector configuraiton."
   default     = ["primary"]
 }
+
+variable "hub_cidr" {
+  type        = list(any)
+  description = "(Optional) CIDR range for the hub VNET."
+  default     = ["10.0.0.0/24"]
+}
+
+variable "spoke_cidr" {
+  type        = list(any)
+  description = "(Optional) CIDR range for the spoke VNET."
+  default     = ["10.0.1.0/24"]
+}

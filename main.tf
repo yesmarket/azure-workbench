@@ -9,14 +9,14 @@ resource "azurerm_virtual_network" "hub" {
   name                = "hub-vnet"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
-  address_space       = ["10.0.0.0/24"]
+  address_space       = var.hub_cidr
 }
 
 resource "azurerm_virtual_network" "spoke" {
   name                = "spoke-vnet"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
-  address_space       = ["10.0.1.0/24"]
+  address_space       = var.spoke_cidr
 }
 
 resource "azurerm_virtual_network_peering" "hub2spoke_peer" {
@@ -42,14 +42,14 @@ resource "azurerm_subnet" "hub_public" {
   name                 = "hub-public-snet"
   resource_group_name  = azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.hub.name
-  address_prefixes     = ["10.0.0.0/26"]
+  address_prefixes     = [cidrsubnet(var.hub_cidr[0], 2, 0)]
 }
 
 resource "azurerm_subnet" "spoke_private" {
   name                 = "spoke-private-snet"
   resource_group_name  = azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.spoke.name
-  address_prefixes     = ["10.0.1.0/26"]
+  address_prefixes     = [cidrsubnet(var.spoke_cidr[0], 2, 0)]
 }
 
 # misc internal VM
@@ -79,7 +79,7 @@ module "subnet_router" {
   nic_subnet_id       = azurerm_subnet.hub_public.id
   ssh_username        = var.ssh_username
   auth_key            = var.subnet_router_auth_key
-  advertised_routes   = "10.0.0.0/24,10.0.1.0/24"
+  advertised_routes   = "${var.hub_cidr[0]},${var.spoke_cidr[0]}"
   availability_set_id = azurerm_availability_set.subnet_router_aset.id
   public_ssh_key      = var.public_ssh_key
 }
@@ -111,20 +111,20 @@ module "app_connector" {
 #  resource_group_name = azurerm_resource_group.this.name
 #  location = azurerm_resource_group.this.location
 #  virtual_network_name = azurerm_virtual_network.hub.name
-#  subnet_cidr = "10.0.0.64/26"
+#  subnet_cidr = cidrsubnet(var.hub_cidr[0], 2, 1)
 #}
 
-## private storage account
-#module "private_storage_account" {
-#  source                     = "./modules/private-storage-account"
-#  resource_group_name        = azurerm_resource_group.this.name
-#  location                   = azurerm_resource_group.this.location
-#  private_endpoint_subnet_id = azurerm_subnet.spoke_private.id
-#  private_dns_zone_virtual_networks = {
-#    hub   = azurerm_virtual_network.hub.id
-#    spoke = azurerm_virtual_network.spoke.id
-#  }
-#}
+# private storage account
+module "private_storage_account" {
+  source                     = "./modules/private-storage-account"
+  resource_group_name        = azurerm_resource_group.this.name
+  location                   = azurerm_resource_group.this.location
+  private_endpoint_subnet_id = azurerm_subnet.spoke_private.id
+  private_dns_zone_virtual_networks = {
+    hub   = azurerm_virtual_network.hub.id
+    spoke = azurerm_virtual_network.spoke.id
+  }
+}
 
 # private SQL database
 module "private_sql_database" {

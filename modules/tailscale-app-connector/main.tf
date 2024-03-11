@@ -1,25 +1,25 @@
 resource "azurerm_public_ip" "this" {
-  name                = "${var.name_prefix}-tailscale-subnet-router-pip"
+  name                = "${local.app_connector_vm_name}-pip"
   resource_group_name = var.resource_group_name
   location            = var.location
   allocation_method   = "Dynamic"
 }
 
 resource "azurerm_network_interface" "this" {
-  name                = "${var.name_prefix}-tailscale-subnet-router-nic"
+  name                = "${local.app_connector_vm_name}-nic"
   resource_group_name = var.resource_group_name
   location            = var.location
 
   ip_configuration {
-    name                          = "${var.name_prefix}-tailscale-subnet-router-cfg"
-    subnet_id                     = var.nic_subnet_id
+    name                          = "${local.app_connector_vm_name}-cfg"
+    subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.this.id
   }
 }
 
 resource "azurerm_linux_virtual_machine" "this" {
-  name                = "${var.name_prefix}-tailscale-subnet-router-vm"
+  name                = local.app_connector_vm_name
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = var.vm_size
@@ -27,8 +27,8 @@ resource "azurerm_linux_virtual_machine" "this" {
   availability_set_id = var.availability_set_id
 
   custom_data = base64encode(templatefile("${path.module}/templates/bootstrap-script.tpl", {
-    auth_key          = var.auth_key
-    advertised_routes = var.advertised_routes
+    auth_key        = var.auth_key
+    advertised_tags = var.advertised_tags
   }))
 
   network_interface_ids = [
@@ -37,19 +37,19 @@ resource "azurerm_linux_virtual_machine" "this" {
 
   admin_ssh_key {
     username   = var.ssh_username
-    public_key = var.public_ssh_key
+    public_key = var.ssh_public_key
   }
 
   os_disk {
-    name                 = "${var.name_prefix}-tailscale-subnet-router-osdisk"
+    name                 = "${local.app_connector_vm_name}-osdisk"
     caching              = var.disk_caching
     storage_account_type = var.disk_storage_account_type
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
+    publisher = var.source_image_publisher
+    offer     = var.source_image_offer
+    sku       = var.source_image_sku
+    version   = var.source_image_version
   }
 }

@@ -1,11 +1,16 @@
+variable "naming_prefix" {
+  type        = string
+  description = "The naming prefix for all resource in this module."  
+}
+
 variable "resource_group_name" {
   type        = string
-  description = "(Required) The resource group that will contain the SQL database (and related resources)."
+  description = "The resource group that will contain the SQL database (and related resources)."
 }
 
 variable "location" {
   type        = string
-  description = "(Required) The location of the SQL database."
+  description = "The location of the SQL database."
 }
 
 variable "database_username" {
@@ -21,10 +26,10 @@ variable "database_password" {
 
 variable "private_endpoint_subnet_id" {
   type        = string
-  description = "(Required) The subnet where the SQL database private endpoint will be deployed."
+  description = "The subnet where the SQL database private endpoint will be deployed."
 }
 
 variable "private_dns_zone_virtual_networks" {
   type        = map(any)
-  description = "(Required) The virtual networks that will be linked to the private DNS zone that contains DNS records to resolve the SQL database private endpoint IP address. Note: this is a map, because we might want this DNS config in multiple peered networks."
+  description = "The virtual networks that will be linked to the private DNS zone that contains DNS records to resolve the SQL database private endpoint IP address. Note: this is a map, because we might want this DNS config in multiple peered networks."
 }

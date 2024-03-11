@@ -1,5 +1,5 @@
 resource "azurerm_mssql_server" "this" {
-  name                          = "tailscale-demo-sql"
+  name                          = local.sql_name
   resource_group_name           = var.resource_group_name
   location                      = var.location
   version                       = "12.0"
@@ -9,7 +9,7 @@ resource "azurerm_mssql_server" "this" {
 }
 
 resource "azurerm_mssql_database" "this" {
-  name      = "tailscale-demo-sqldb"
+  name      = local.sqldb_name
   server_id = azurerm_mssql_server.this.id
   collation = "SQL_Latin1_General_CP1_CI_AS"
 
@@ -21,20 +21,20 @@ resource "azurerm_mssql_database" "this" {
 }
 
 resource "azurerm_private_endpoint" "this" {
-  name                = "sql-pep"
+  name                = "${local.sql_name}-pep"
   resource_group_name = var.resource_group_name
   location            = var.location
   subnet_id           = var.private_endpoint_subnet_id
 
   private_service_connection {
-    name                           = "sql-pep-con"
+    name                           = "${local.sql_name}-pepcon"
     private_connection_resource_id = azurerm_mssql_server.this.id
     subresource_names              = ["sqlServer"]
     is_manual_connection           = false
   }
 
   private_dns_zone_group {
-    name                 = "sql-pep-pdz-grp"
+    name                 = "${local.sql_name}-pepdzg"
     private_dns_zone_ids = [azurerm_private_dns_zone.this.id]
   }
 }
@@ -46,7 +46,7 @@ resource "azurerm_private_dns_zone" "this" {
 
 resource "azurerm_private_dns_zone_virtual_network_link" "this" {
   for_each              = var.private_dns_zone_virtual_networks
-  name                  = "${each.key}-vnet-sql-pdz-lnk"
+  name                  = "${local.sql_name}-${each.key}-vnet-pdz-lnk"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   virtual_network_id    = each.value

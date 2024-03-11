@@ -6,7 +6,7 @@ resource "azurerm_subnet" "this" {
 }
 
 resource "azurerm_public_ip" "this" {
-  name                = "bastion-pip"
+  name                = "${local.bastion_name}-pip"
   resource_group_name = var.resource_group_name
   location            = var.location
   allocation_method   = "Static"
@@ -14,7 +14,7 @@ resource "azurerm_public_ip" "this" {
 }
 
 resource "azurerm_bastion_host" "this" {
-  name                = "tailscale-private-network-bastion"
+  name                = local.bastion_name
   resource_group_name = var.resource_group_name
   location            = var.location
   sku                 = "Standard"
@@ -26,7 +26,7 @@ resource "azurerm_bastion_host" "this" {
   tunneling_enabled      = true
 
   ip_configuration {
-    name                 = "bastion-cfg"
+    name                 = "${local.bastion_name}-cfg"
     subnet_id            = azurerm_subnet.this.id
     public_ip_address_id = azurerm_public_ip.this.id
   }

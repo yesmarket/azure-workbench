@@ -1,17 +1,17 @@
 resource "azurerm_network_interface" "this" {
-  name                = "${var.name_prefix}-nic"
+  name                = "${local.vm_name}-nic"
   resource_group_name = var.resource_group_name
   location            = var.location
 
   ip_configuration {
-    name                          = "${var.name_prefix}-cfg"
-    subnet_id                     = var.nic_subnet_id
+    name                          = "${local.vm_name}-cfg"
+    subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
   }
 }
 
 resource "azurerm_linux_virtual_machine" "this" {
-  name                = "${var.name_prefix}-vm"
+  name                = local.vm_name
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = var.vm_size
@@ -23,11 +23,11 @@ resource "azurerm_linux_virtual_machine" "this" {
 
   admin_ssh_key {
     username   = var.ssh_username
-    public_key = var.public_ssh_key
+    public_key = var.ssh_public_key
   }
 
   os_disk {
-    name                 = "${var.name_prefix}-osdisk"
+    name                 = "${local.vm_name}-osdisk"
     caching              = var.disk_caching
     storage_account_type = var.disk_storage_account_type
   }

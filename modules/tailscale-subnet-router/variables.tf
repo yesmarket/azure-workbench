@@ -3,35 +3,51 @@ variable "naming_prefix" {
   description = "The naming prefix for all resource in this module."  
 }
 
+variable "unique_identifier" {
+  type        = string
+  description = "The identifier for this specific subnet-router in a HA deployment."
+}
+
 variable "resource_group_name" {
   type        = string
-  description = "The resource group that will contain the VM (and related resources)."
+  description = "The resource group that will contain the subnet-router (and related resources)."
 }
 
 variable "location" {
   type        = string
-  description = "The location of the VM."
+  description = "The location of the subnet-router."
 }
 
 variable "subnet_id" {
   type        = string
-  description = "The subnet in which to deploy the VM."
+  description = "The subnet in which to delpoy the subnet-router."
 }
 
 variable "ssh_username" {
   type        = string
-  description = "The SSH username for accessing the VM."
+  description = "The SSH username for accessing the subnet-router."
 }
 
 variable "ssh_public_key" {
   type        = string
-  description = "The SSH public key for accessing the VM."
+  description = "The SSH public key for accessing the subnet-router."
+}
+
+variable "auth_key" {
+  type        = string
+  description = "The auth key to authenticate the subnet-router without an interactive login."
+  sensitive   = true
+}
+
+variable "advertised_routes" {
+  type        = string
+  description = "The IP ranges/addresses that will go to the subnet-router."
 }
 
 variable "vm_size" {
   type        = string
-  description = "The size of the VM."
-  default     = "Standard_A1_v2"
+  description = "The size of the subnet-router VM."
+  default     = "Standard_F2"
 }
 
 variable "disk_caching" {
@@ -68,4 +84,9 @@ variable "source_image_version" {
   type        = string
   description = "The source image version"
   default     = "latest"
+}
+
+variable "availability_set_id" {
+  type        = string
+  description = "The availability set to use for the subnet-router."
 }

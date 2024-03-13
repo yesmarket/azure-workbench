@@ -11,7 +11,7 @@ resource "azurerm_key_vault" "this" {
 
 resource "azurerm_key_vault_access_policy" "full_access_users" {
 
-  for_each = var.key_vault_readers
+  for_each = var.key_vault_full_access_users
 
   key_vault_id = azurerm_key_vault.this.id
 

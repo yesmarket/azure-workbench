@@ -12,3 +12,8 @@ variable "location" {
   type        = string
   description = "The location of the subnet-router."
 }
+
+variable "tenant_id" {
+  type        = string
+  description = "AAD tennant ID."
+}

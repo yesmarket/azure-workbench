@@ -152,7 +152,7 @@ module "private_storage_account" {
 
 # private SQL database
 module "private_sql_database" {
-  count                      = var.add_private_sql_database ? 1 : 0
+  count                      = var.add_private_sql_server ? 1 : 0
   source                     = "./modules/private-sql-database"
   naming_prefix              = local.naming_prefix
   resource_group_name        = azurerm_resource_group.this.name
@@ -193,6 +193,7 @@ module "gpg_function_app" {
   naming_prefix       = local.naming_prefix
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
+  tenant_id           = var.tenant_id
 }
 
 # ADF
@@ -204,10 +205,10 @@ module "adf_workspace" {
   location                    = azurerm_resource_group.this.location
   add_self_hosted_ir          = length(var.adf_shirs) > 0 ? true : false
   add_private_storage_account = var.add_private_storage_account
-  add_private_sql_database    = var.add_private_sql_database
+  add_private_sql_server      = var.add_private_sql_server
   add_private_key_vault       = var.add_private_key_vault
   private_storage_account_id  = var.add_private_storage_account ? module.private_storage_account.0.private_storage_account_id : null
-  private_mssql_database_id   = var.add_private_sql_database ? module.private_sql_database.0.private_mssql_database_id : null
+  private_mssql_server_id     = var.add_private_sql_server ? module.private_sql_database.0.private_mssql_server_id : null
   private_key_vault_id        = var.add_private_key_vault ? module.private_key_vault.0.private_key_vault_id : null
 }
 

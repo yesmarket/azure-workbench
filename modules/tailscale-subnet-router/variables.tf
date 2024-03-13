@@ -62,28 +62,10 @@ variable "disk_storage_account_type" {
   default     = "Standard_LRS"
 }
 
-variable "source_image_publisher" {
+variable "source_image_id" {
   type        = string
-  description = "The source image publisher"
-  default     = "Canonical"
-}
-
-variable "source_image_offer" {
-  type        = string
-  description = "The source image offer"
-  default     = "0001-com-ubuntu-server-jammy"
-}
-
-variable "source_image_sku" {
-  type        = string
-  description = "The source image sku"
-  default     = "22_04-lts"
-}
-
-variable "source_image_version" {
-  type        = string
-  description = "The source image version"
-  default     = "latest"
+  description = "The tailscale subnet-router custom image id"
+  default     = "/subscriptions/46934691-fbae-44fe-abb8-900c33ca8095/resourceGroups/managed-images/providers/Microsoft.Compute/images/tailscale-subnet-router"
 }
 
 variable "availability_set_id" {

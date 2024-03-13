@@ -1,6 +1,6 @@
 variable "naming_prefix" {
   type        = string
-  description = "The naming prefix for all resource in this module."  
+  description = "The naming prefix for all resource in this module."
 }
 
 variable "unique_identifier" {
@@ -43,16 +43,10 @@ variable "availability_set_id" {
   description = "The availability set to use for the ADF SHIR."
 }
 
-variable "ir_msi_url" {
-  type        = string
-  description = "The download URL of the self-hosted integration runtime."
-  default     = "https://download.microsoft.com/download/E/4/7/E4771905-1079-445B-8BF9-8A1A075D8A10/IntegrationRuntime_5.36.8726.3.msi"
-}
-
 variable "vm_size" {
   type        = string
   description = "The size of the VM."
-  default     = "Standard_A4_v2"
+  default     = "Standard_D4ls_v5"
 }
 
 variable "disk_caching" {
@@ -64,29 +58,11 @@ variable "disk_caching" {
 variable "disk_storage_account_type" {
   type        = string
   description = "The VM disk storage account type."
-  default     = "Standard_LRS"
+  default     = "Premium_LRS"
 }
 
-variable "source_image_publisher" {
+variable "source_image_id" {
   type        = string
-  description = "The source image publisher"
-  default     = "MicrosoftWindowsServer"
-}
-
-variable "source_image_offer" {
-  type        = string
-  description = "The source image offer"
-  default     = "WindowsServer"
-}
-
-variable "source_image_sku" {
-  type        = string
-  description = "The source image sku"
-  default     = "2022-Datacenter"
-}
-
-variable "source_image_version" {
-  type        = string
-  description = "The source image version"
-  default     = "latest"
+  description = "The ADF SHIR custom image id"
+  default     = "/subscriptions/46934691-fbae-44fe-abb8-900c33ca8095/resourceGroups/managed-images/providers/Microsoft.Compute/images/adf-shir-windows-server-2019"
 }

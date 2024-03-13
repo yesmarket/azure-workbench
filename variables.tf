@@ -75,7 +75,7 @@ variable "tailscale_app_connectors" {
 variable "adf_shirs" {
   type        = list(any)
   description = "A list of ADF SHIRs to deploy. Multiple items represents a HA SHIR configuraiton."
-  default     = ["01"]
+  default     = ["1"]
 }
 
 variable "network_vnet_cidr" {
@@ -112,7 +112,7 @@ variable "add_private_storage_account" {
   default     = true
 }
 
-variable "add_private_sql_database" {
+variable "add_private_sql_server" {
   type        = bool
   description = "Determines whether to create a private SQL database or not."
   default     = true

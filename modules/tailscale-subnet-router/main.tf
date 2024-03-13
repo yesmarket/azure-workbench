@@ -46,10 +46,5 @@ resource "azurerm_linux_virtual_machine" "this" {
     storage_account_type = var.disk_storage_account_type
   }
 
-  source_image_reference {
-    publisher = var.source_image_publisher
-    offer     = var.source_image_offer
-    sku       = var.source_image_sku
-    version   = var.source_image_version
-  }
+  source_image_id = var.source_image_id
 }

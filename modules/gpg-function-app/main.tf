@@ -35,6 +35,7 @@ resource "azurerm_linux_function_app" "this" {
   name                = local.fn_app_name
   resource_group_name = var.resource_group_name
   location            = var.location
+  https_only          = true
 
   service_plan_id = azurerm_service_plan.this.id
 
@@ -53,6 +54,21 @@ resource "azurerm_linux_function_app" "this" {
       allowed_origins = ["*", "https://portal.azure.com"]
     }
   }
+
+#  auth_settings_v2 {
+#    auth_enabled = true
+#    require_authentication = true
+#    unauthenticated_action = "Return401"
+#    default_provider = "azureactivedirectory"
+#    active_directory_v2 {
+#      client_id = ""
+#      tenant_auth_endpoint = "https://login.microsoftonline.com/v2.0/${var.tenant_id}/"
+#      client_secret_setting_name = var.client_secret
+#      allowed_identities = [
+#        "https://${lookup(each.value, "appservice_name")}.azurewebsites.net"
+#      ]
+#    }
+#  }
 
   identity {
     type = "SystemAssigned"

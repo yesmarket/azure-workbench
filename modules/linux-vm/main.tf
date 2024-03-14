@@ -1,3 +1,11 @@
+resource "azurerm_public_ip" "this" {
+  count               = var.public ? 1 : 0
+  name                = "${local.vm_name}-pip"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  allocation_method   = "Dynamic"
+}
+
 resource "azurerm_network_interface" "this" {
   name                = "${local.vm_name}-nic"
   resource_group_name = var.resource_group_name
@@ -7,6 +15,7 @@ resource "azurerm_network_interface" "this" {
     name                          = "${local.vm_name}-cfg"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = var.public ? azurerm_public_ip.this.0.id : null
   }
 }
 
@@ -15,14 +24,14 @@ resource "azurerm_linux_virtual_machine" "this" {
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = var.vm_size
-  admin_username      = var.ssh_username
+  admin_username      = var.username
 
   network_interface_ids = [
     azurerm_network_interface.this.id,
   ]
 
   admin_ssh_key {
-    username   = var.ssh_username
+    username   = var.username
     public_key = var.ssh_public_key
   }
 

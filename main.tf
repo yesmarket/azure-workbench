@@ -68,15 +68,16 @@ resource "azurerm_subnet" "private" {
 }
 
 # misc internal VM
-module "private_linux_vm" {
+module "linux_vm" {
   count               = var.add_private_linux_vm_cm_vnet ? 1 : 0
-  source              = "./modules/private-linux-vm"
+  source              = "./modules/linux-vm"
   naming_prefix       = local.naming_prefix
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   subnet_id           = azurerm_subnet.private.id
-  ssh_username        = var.username
+  username            = var.username
   ssh_public_key      = var.ssh_public_key
+  public              = false
 }
 
 # subnet-router

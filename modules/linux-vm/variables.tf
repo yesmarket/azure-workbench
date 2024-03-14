@@ -18,7 +18,7 @@ variable "subnet_id" {
   description = "The subnet in which to deploy the VM."
 }
 
-variable "ssh_username" {
+variable "username" {
   type        = string
   description = "The SSH username for accessing the VM."
 }
@@ -68,4 +68,10 @@ variable "source_image_version" {
   type        = string
   description = "The source image version"
   default     = "latest"
+}
+
+variable "public" {
+  type        = bool
+  description = "The source image version"
+  default     = false
 }

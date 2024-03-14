@@ -23,7 +23,7 @@ variable "subnet_id" {
   description = "The subnet in which to deploy the app-connector."
 }
 
-variable "ssh_username" {
+variable "username" {
   type        = string
   description = "The SSH username for accessing the app-connector."
 }
@@ -71,4 +71,5 @@ variable "source_image_id" {
 variable "availability_set_id" {
   type        = string
   description = "The availability set to use for the subnet-router."
+  default     = null
 }

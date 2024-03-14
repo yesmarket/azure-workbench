@@ -23,7 +23,7 @@ variable "subnet_id" {
   description = "The subnet in which to delpoy the subnet-router."
 }
 
-variable "ssh_username" {
+variable "username" {
   type        = string
   description = "The SSH username for accessing the subnet-router."
 }

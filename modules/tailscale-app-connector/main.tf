@@ -23,7 +23,7 @@ resource "azurerm_linux_virtual_machine" "this" {
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = var.vm_size
-  admin_username      = var.ssh_username
+  admin_username      = var.username
   availability_set_id = var.availability_set_id
 
   custom_data = base64encode(templatefile("${path.module}/templates/bootstrap-script.tpl", {
@@ -36,7 +36,7 @@ resource "azurerm_linux_virtual_machine" "this" {
   ]
 
   admin_ssh_key {
-    username   = var.ssh_username
+    username   = var.username
     public_key = var.ssh_public_key
   }
 

@@ -95,7 +95,7 @@ module "tailscale_subnet_router" {
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   subnet_id           = azurerm_subnet.ingress.id
-  ssh_username        = var.username
+  username            = var.username
   ssh_public_key      = var.ssh_public_key
   auth_key            = var.tailscale_subnet_router_auth_key
   advertised_routes   = "${var.network_vnet_cidr[0]},${var.cm_vnet_cidr[0]}"
@@ -118,7 +118,7 @@ module "tailscale_app_connector" {
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   subnet_id           = azurerm_subnet.ingress.id
-  ssh_username        = var.username
+  username            = var.username
   ssh_public_key      = var.ssh_public_key
   auth_key            = var.tailscale_app_connector_auth_key
   advertised_tags     = var.tailscale_app_connector_advertised_tags

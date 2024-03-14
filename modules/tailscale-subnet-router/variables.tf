@@ -71,4 +71,5 @@ variable "source_image_id" {
 variable "availability_set_id" {
   type        = string
   description = "The availability set to use for the subnet-router."
+  default     = null
 }

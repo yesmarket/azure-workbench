@@ -2,15 +2,40 @@ resource "azurerm_storage_account" "this" {
   name                          = replace(local.storage_account_name, "-", "")
   resource_group_name           = var.resource_group_name
   location                      = var.location
-  account_tier                  = "Standard"
-  account_replication_type      = "LRS"
+  account_tier                  = var.account_tier
+  account_kind                  = var.hierarchical_namespace_enabled ? "BlockBlobStorage" : var.account_kind
+  account_replication_type      = var.account_replication_type
   public_network_access_enabled = false
+  is_hns_enabled                = var.hierarchical_namespace_enabled
+  sftp_enabled                  = var.sftp_enabled
 }
 
-#resource "azurerm_storage_container" "test" {
-#  name                 = "test"
-#  storage_account_name = azurerm_storage_account.this.name
-#}
+resource "azurerm_storage_container" "sftp" {
+  count                = var.sftp_enabled ? 1 : 0
+  name                 = var.sftp_container_name
+  storage_account_name = azurerm_storage_account.this.name
+}
+
+resource "azurerm_storage_account_local_user" "this" {
+  count                = var.sftp_enabled ? 1 : 0
+  name                 = var.username
+  storage_account_id   = azurerm_storage_account.this.id
+  ssh_key_enabled      = true
+  ssh_authorized_key {
+    description = "key1"
+    key         = var.ssh_public_key
+  }
+  permission_scope {
+    permissions {
+      read   = true
+      list = true
+      create = true
+      write = true
+    }
+    service       = "blob"
+    resource_name = azurerm_storage_container.sftp.0.name
+  }
+}
 
 resource "azurerm_private_endpoint" "this" {
   name                = "${local.storage_account_name}-pep"

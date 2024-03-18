@@ -21,6 +21,7 @@ variable "private_endpoint_subnet_id" {
 variable "private_dns_zone_virtual_networks" {
   type        = map(any)
   description = "The virtual networks that will be linked to the private DNS zone that contains DNS records to resolve the storage account private endpoint IP address. Note: this is a map, because we might want this DNS config in multiple peered networks."
+  default 	  = []
 }
 
 variable "sftp_enabled" {
